@@ -1,0 +1,49 @@
+name: Final Core Session Fix
+
+on:
+  push:
+    paths:
+      - '.github/workflows/final-core-session-fix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-index:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Correct session identity and spacing
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+
+          text = text.replace('Master DOC ROI · Strategy', 'Strategy Speciality · Core Session')
+          text = text.replace('The Digital Market and AI — DOC ROI · v23', 'The Digital Market and AI — DOC ROI · v24')
+
+          spacing_css = '''
+          /* Final spacing between the speciality architecture and the blue core-concept frame */
+          .architecture-scroll + .core-concept,
+          .architecture-map + .core-concept {
+            margin-top: 28px !important;
+          }
+          '''
+
+          if spacing_css.strip() not in text:
+              text = text.replace('</style>', spacing_css + '\n</style>', 1)
+
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit final correction
+        run: |
+          git config user.name "DOC ROI Automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html
+          git commit -m "Fix core session identity and architecture spacing"
+          git push

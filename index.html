@@ -93,6 +93,11 @@
     html=html.slice(0,gridStart)+correctedGrid+'\n</div>\n'+html.slice(convergenceStart);
   }
 
+  html=html.replace(
+    '<div class="key-card"><b>8. Every speciality belongs to the same digital DNA</b><p>Strategy, transformation, management, business, operations and KPI systems are different angles of the same customer-centred digital reality.</p></div>',
+    '<div class="key-card"><b>8. Triple Loop and Customer-Centric Management Architecture</b><p>The Triple Loop connects acquisition, loyalty and repurchase, and feedback and learning. The Customer-Centric Management Architecture aligns strategy, digital transformation and AI, administration and resource management, business, operations and KPI management around the same customer evidence.</p></div>'
+  );
+
   document.open();
   document.write(html);
   document.close();

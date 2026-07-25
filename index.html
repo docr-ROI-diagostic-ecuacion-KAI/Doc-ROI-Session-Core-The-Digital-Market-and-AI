@@ -21,10 +21,78 @@
   const bytes=Uint8Array.from(binary,char=>char.charCodeAt(0));
   const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
   let html=await new Response(stream).text();
+
   html=html.replace(
     'https://docroi.marketing/wp-content/uploads/2026/07/937f2a27-909d-4c2c-831a-769b19ff0ed9.png',
     'https://docroi.marketing/wp-content/uploads/2026/07/Triple-Loop.png'
   );
+
+  html=html.replace('</style>', `
+.double-loop-card.category-feedback::before{
+  background:linear-gradient(90deg,#17275F 0%,#344A82 100%);
+}
+.category-feedback .double-loop-category{
+  background:linear-gradient(90deg,#17275F 0%,#344A82 100%);
+}
+</style>`);
+
+  const correctedGrid=`<div class="double-loop-card-grid">
+<article class="double-loop-card category-acquisition">
+<div class="double-loop-card-head"><span class="double-loop-number">1</span><span class="double-loop-category">Acquisition</span></div>
+<h3>Buyer Persona</h3><p>An evidence-based definition of the target customer profile, connected to a clear offer and acquisition strategy.</p>
+</article>
+<article class="double-loop-card category-acquisition">
+<div class="double-loop-card-head"><span class="double-loop-number">2</span><span class="double-loop-category">Acquisition</span></div>
+<h3>MQL</h3><p>A Marketing Qualified Lead whose profile and behaviour indicate a relevant fit and measurable intention.</p>
+</article>
+<article class="double-loop-card category-acquisition">
+<div class="double-loop-card-head"><span class="double-loop-number">3</span><span class="double-loop-category">Acquisition</span></div>
+<h3>SQL</h3><p>A Sales Qualified Lead ready for commercial management because fit, need and buying readiness have been validated.</p>
+</article>
+<article class="double-loop-card category-acquisition">
+<div class="double-loop-card-head"><span class="double-loop-number">4</span><span class="double-loop-category">Acquisition</span></div>
+<h3>Omnichannel</h3><p>A coordinated customer experience across channels, messages and touchpoints, with continuity of context and data.</p>
+</article>
+<article class="double-loop-card category-acquisition">
+<div class="double-loop-card-head"><span class="double-loop-number">5</span><span class="double-loop-category">Acquisition</span></div>
+<h3>Sales</h3><p>Conversion of the qualified opportunity into a customer relationship through a relevant value proposition and commercial process.</p>
+</article>
+<article class="double-loop-card category-loyalty">
+<div class="double-loop-card-head"><span class="double-loop-number">6</span><span class="double-loop-category">Loyalty</span></div>
+<h3>Customer Experience</h3><p>Systematic improvement of each customer interaction to create a consistent, valuable and memorable relationship.</p>
+</article>
+<article class="double-loop-card category-loyalty">
+<div class="double-loop-card-head"><span class="double-loop-number">7</span><span class="double-loop-category">Loyalty</span></div>
+<h3>Data Ingestion and Normalisation</h3><p>Capture, validation, cleaning and structuring of customer data so it can be used reliably across systems and decisions.</p>
+</article>
+<article class="double-loop-card category-loyalty">
+<div class="double-loop-card-head"><span class="double-loop-number">8</span><span class="double-loop-category">Loyalty</span></div>
+<h3>Segmentation</h3><p>Grouping customers by behaviour, value, needs, risk, relationship stage and other relevant evidence.</p>
+</article>
+<article class="double-loop-card category-loyalty">
+<div class="double-loop-card-head"><span class="double-loop-number">9</span><span class="double-loop-category">Loyalty</span></div>
+<h3>Prioritised Actions (SPO)</h3><p>Strategy Priority Operation: prioritising and executing the actions with the greatest expected impact, feasibility and relationship value.</p>
+</article>
+<article class="double-loop-card category-loyalty">
+<div class="double-loop-card-head"><span class="double-loop-number">10</span><span class="double-loop-category">Loyalty</span></div>
+<h3>Personalised Campaigns</h3><p>Designing and activating relevant campaigns for each segment and customer context through evidence-based personalisation.</p>
+</article>
+<article class="double-loop-card category-feedback">
+<div class="double-loop-card-head"><span class="double-loop-number">11</span><span class="double-loop-category">Feedback</span></div>
+<h3>Customer Insights and KPIs</h3><p>Transforming customer behaviour, experience and performance data into learning, indicators and evidence for better decisions.</p>
+</article>
+<article class="double-loop-card category-data-buyer">
+<div class="double-loop-card-head"><span class="double-loop-number">12</span><span class="double-loop-category">Feedback</span></div>
+<h3>Data Buyer Persona</h3><p>The feedback output that returns customer evidence to acquisition. It is also the Digital Customer Twins action used to obtain and enrich the customer model.</p><p class="double-loop-humble-note"><strong>DOC ROI contribution.</strong> A modest extension is to make point 12 explicit as the action that transforms loyalty evidence into a refreshed Data Buyer Persona for the next acquisition cycle.</p>
+</article>
+</div>`;
+
+  const gridStart=html.indexOf('<div class="double-loop-card-grid">');
+  const convergenceStart=html.indexOf('<div class="convergence-note">',gridStart);
+  if(gridStart!==-1 && convergenceStart!==-1){
+    html=html.slice(0,gridStart)+correctedGrid+'\n</div>\n'+html.slice(convergenceStart);
+  }
+
   document.open();
   document.write(html);
   document.close();

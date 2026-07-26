@@ -98,6 +98,31 @@
     '<div class="key-card"><b>8. Triple Loop and Customer-Centric Management Architecture</b><p>The Triple Loop connects acquisition, loyalty and repurchase, and feedback and learning. The Customer-Centric Management Architecture aligns strategy, digital transformation and AI, administration and resource management, business, operations and KPI management around the same customer evidence.</p></div>'
   );
 
+  const kaiDecisionReflection=`<div class="final-kai-reflection">
+<span class="label">Final strategic reflection · KAI·ROI · φᵢ / Decision</span>
+<strong>
+  The Digital and AI Market creates value only when critical decisions are made with data, traceability, explicit hypotheses and expected return.
+</strong>
+<p>
+  In the official KAI·ROI v1 architecture, <span class="kai-symbol">φᵢ</span> represents Decision: the quality, maturity and decision-making capability associated with the unit analysed. Because φᵢ is a multiplicative component of KAIᵢ*, weak decision-making constrains value activation even when data, digitalisation, automation and AI are available.
+</p>
+<p>
+  This session therefore leads to one operational question: are critical decisions made using data, traceability, explicit hypotheses and expected return? A Data Buyer Persona or Decision Maker, a digitally mapped journey and reliable customer evidence are essential inputs to that decision, but they do not replace it.
+</p>
+<p>
+  The final strategic lesson is that digitalisation and AI must improve the quality of decisions so that the organisation can connect objectives, intelligence, customer signals, productivity, portfolio health and data monetisation with cost, WACC and Customer Equity.
+</p>
+<p><em>This belongs to the operational implementation layer and does not replace the official KAI·ROI v1 formulation.</em></p>
+<a href="https://docroi.marketing/kai-equation/" rel="noopener" target="_blank">
+  Explore the official KAI·ROI Equation ↗
+</a>
+</div>`;
+
+  html=html.replace(
+    /<div class="final-kai-reflection">[\s\S]*?<\/div>\s*<div class="convergence-note">/,
+    kaiDecisionReflection+'\n<div class="convergence-note">'
+  );
+
   document.open();
   document.write(html);
   document.close();

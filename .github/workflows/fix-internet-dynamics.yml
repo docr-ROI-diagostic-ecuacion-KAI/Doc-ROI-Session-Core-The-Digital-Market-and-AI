@@ -1,0 +1,71 @@
+name: Fix Internet Dynamics link
+
+on:
+  push:
+    paths:
+      - .github/workflows/fix-internet-dynamics.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix-link-in-payload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Replace the button href inside the compressed HTML payload
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import base64
+          import gzip
+          import math
+
+          asset_dir = Path('assets/docroi')
+          chunk_paths = [asset_dir / f'gzchunk{i}.txt' for i in range(4)]
+          encoded = ''.join(path.read_text(encoding='utf-8').strip() for path in chunk_paths)
+          html = gzip.decompress(base64.b64decode(encoded)).decode('utf-8')
+
+          old = 'href="#internet-dynamics-practice"'
+          new = 'href="https://doc-roi-internet-dynamics.vercel.app/" target="_blank" rel="noopener"'
+
+          old_count = html.count(old)
+          if old_count == 0:
+              raise SystemExit('The old Internet Dynamics href was not found in the payload.')
+
+          html = html.replace(old, new)
+
+          if old in html:
+              raise SystemExit('The old href is still present after replacement.')
+          if 'https://doc-roi-internet-dynamics.vercel.app/' not in html:
+              raise SystemExit('The new Internet Dynamics URL was not written.')
+
+          compressed = gzip.compress(html.encode('utf-8'), compresslevel=9, mtime=0)
+          updated = base64.b64encode(compressed).decode('ascii')
+          chunk_size = math.ceil(len(updated) / 4)
+
+          for index, path in enumerate(chunk_paths):
+              start = index * chunk_size
+              end = min((index + 1) * chunk_size, len(updated))
+              path.write_text(updated[start:end], encoding='utf-8')
+
+          print(f'Replaced {old_count} occurrence(s).')
+          print('The compressed payload now contains the direct Internet Dynamics URL.')
+          PY
+
+      - name: Commit the corrected payload
+        shell: bash
+        run: |
+          git config user.name "DOC ROI Automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets/docroi/gzchunk0.txt assets/docroi/gzchunk1.txt assets/docroi/gzchunk2.txt assets/docroi/gzchunk3.txt
+          if git diff --cached --quiet; then
+            echo "No payload changes were required."
+            exit 0
+          fi
+          git commit -m "Fix Internet Dynamics button target [skip ci]"
+          git push

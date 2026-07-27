@@ -34,6 +34,25 @@
 .category-feedback .double-loop-category{
   background:linear-gradient(90deg,#17275F 0%,#344A82 100%);
 }
+.customer-reference-note{
+  margin:14px 0;
+  padding:16px 18px;
+  border:1px solid #C9D6E3;
+  border-left:4px solid #10345B;
+  background:#F4F7FA;
+}
+.customer-reference-note strong{
+  display:block;
+  margin-bottom:6px;
+  color:#0B1F3A;
+  font-size:14px;
+}
+.customer-reference-note p{
+  margin:0;
+  color:#566273;
+  font-size:13px;
+  line-height:1.55;
+}
 </style>`);
 
   const correctedGrid=`<div class="double-loop-card-grid">
@@ -97,6 +116,17 @@
     '<div class="key-card"><b>8. Every speciality belongs to the same digital DNA</b><p>Strategy, transformation, management, business, operations and KPI systems are different angles of the same customer-centred digital reality.</p></div>',
     '<div class="key-card"><b>8. Triple Loop and Customer-Centric Management Architecture</b><p>The Triple Loop connects acquisition, loyalty and repurchase, and feedback and learning. The Customer-Centric Management Architecture aligns strategy, digital transformation and AI, administration and resource management, business, operations and KPI management around the same customer evidence.</p></div>'
   );
+
+  const customerReference=`<div class="customer-reference-note">
+<strong>Reference only · Buyer Persona and Decision Maker</strong>
+<p>The Buyer Persona identifies the customer profile and context, while the Decision Maker identifies the person or role with authority to approve an organisational commitment. Their construction and practical application will be developed in a later subject.</p>
+</div>`;
+
+  const practiceStart=html.indexOf('<div aria-label="DOC ROI practical prescriptions" class="practice-grid">');
+  const bridgeStart=html.indexOf('<div class="bridge-box">',practiceStart);
+  if(practiceStart!==-1 && bridgeStart!==-1){
+    html=html.slice(0,practiceStart)+customerReference+'\n'+html.slice(bridgeStart);
+  }
 
   const kaiDecisionReflection=`<div class="final-kai-reflection">
 <span class="label">Final strategic reflection · KAI·ROI · φᵢ / Decision</span>

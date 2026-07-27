@@ -11,6 +11,7 @@
 <noscript>This page requires JavaScript.</noscript>
 <script>
 (async()=>{
+  const TARGET='https://doc-roi-internet-dynamics.vercel.app/';
   const paths=[0,1,2,3].map(i=>`assets/docroi/gzchunk${i}.txt`);
   const parts=await Promise.all(paths.map(async path=>{
     const response=await fetch(path,{cache:'no-store'});
@@ -23,171 +24,13 @@
   let html=await new Response(stream).text();
 
   html=html.replace(/My\s+(?:Medicine|Medical)\s+Cabinet/gi,'My Cabinet');
+  html=html.replace(/href=(['"])#internet-dynamics-practice\1/gi,`href="${TARGET}" target="_blank" rel="noopener"`);
+  html=html.replace('https://docroi.marketing/wp-content/uploads/2026/07/937f2a27-909d-4c2c-831a-769b19ff0ed9.png','https://docroi.marketing/wp-content/uploads/2026/07/Triple-Loop.png');
+  html=html.replace(/Customer\s+(?:Double|Triple)\s+Loop/g,'Customer Business Loop').replace(/double loop/gi,'Customer Business Loop');
+  html=html.replace('</style>',`.double-loop-card.category-feedback::before,.category-feedback .double-loop-category{background:linear-gradient(90deg,#17275F 0%,#344A82 100%)}.customer-reference-note{margin:14px 0;padding:16px 18px;border:1px solid #C9D6E3;border-left:4px solid #10345B;background:#F4F7FA}.customer-reference-note strong{display:block;margin-bottom:6px;color:#0B1F3A;font-size:14px}.customer-reference-note p{margin:0;color:#566273;font-size:13px;line-height:1.55}</style>`);
 
-  html=html.replace(
-    /<a\b([^>]*)>([\s\S]*?Go to the Internet Dynamics Vitamin[\s\S]*?)<\/a>/gi,
-    (match,attributes,content)=>{
-      const cleanedAttributes=attributes
-        .replace(/\s+href=(['"])[\s\S]*?\1/i,'')
-        .replace(/\s+target=(['"])[\s\S]*?\1/i,'')
-        .replace(/\s+rel=(['"])[\s\S]*?\1/i,'');
-      return `<a${cleanedAttributes} href="https://doc-roi-internet-dynamics.vercel.app/" target="_blank" rel="noopener">${content}</a>`;
-    }
-  );
-
-  html=html.replace(
-    'https://docroi.marketing/wp-content/uploads/2026/07/937f2a27-909d-4c2c-831a-769b19ff0ed9.png',
-    'https://docroi.marketing/wp-content/uploads/2026/07/Triple-Loop.png'
-  );
-
-  html=html.replace(/Customer\s+(?:Double|Triple)\s+Loop/g,'Customer Business Loop');
-  html=html.replace(/double loop/gi,'Customer Business Loop');
-  html=html.replace(
-    '<span class="slide-kicker">McKinsey-Inspired Customer Business Loop</span>',
-    '<span class="slide-kicker">Customer Business Loop</span>'
-  );
-  html=html.replace(
-    'How does customer centricity create a Customer Business Loop between acquisition and loyalty?',
-    'How does the Customer Business Loop connect acquisition, loyalty, repurchase and learning?'
-  );
-  html=html.replace(
-    'Core concept · McKinsey-inspired Customer Business Loop',
-    'Core concept · Customer Business Loop'
-  );
-  html=html.replace(
-    'The acquisition loop converts demand into customers, while the loyalty loop turns customer experience and data into intelligence. DOC ROI closes the Customer Business Loop at point 12 by returning the most valuable customer patterns to a refined Data Buyer Persona for the next acquisition cycle.',
-    'The Customer Business Loop connects acquisition, loyalty and repurchase, and feedback and learning. Point 12 returns the most valuable customer patterns to a refined Data Buyer Persona, improving the next acquisition cycle.'
-  );
-  html=html.replace(
-    'Customer centricity creates a Customer Business Loop because acquisition generates customers, and loyalty reveals which customers are worth repeating, protecting and replicating in the next cycle.',
-    'Customer centricity creates a Customer Business Loop by connecting acquisition with loyalty, repurchase, feedback and learning, so the next cycle begins with better customer evidence.'
-  );
-
-  html=html.replace('</style>', `
-.double-loop-card.category-feedback::before{
-  background:linear-gradient(90deg,#17275F 0%,#344A82 100%);
-}
-.category-feedback .double-loop-category{
-  background:linear-gradient(90deg,#17275F 0%,#344A82 100%);
-}
-.customer-reference-note{
-  margin:14px 0;
-  padding:16px 18px;
-  border:1px solid #C9D6E3;
-  border-left:4px solid #10345B;
-  background:#F4F7FA;
-}
-.customer-reference-note strong{
-  display:block;
-  margin-bottom:6px;
-  color:#0B1F3A;
-  font-size:14px;
-}
-.customer-reference-note p{
-  margin:0;
-  color:#566273;
-  font-size:13px;
-  line-height:1.55;
-}
-</style>`);
-
-  const correctedGrid=`<div class="double-loop-card-grid">
-<article class="double-loop-card category-acquisition">
-<div class="double-loop-card-head"><span class="double-loop-number">1</span><span class="double-loop-category">Acquisition</span></div>
-<h3>Buyer Persona</h3><p>An evidence-based definition of the target customer profile, connected to a clear offer and acquisition strategy.</p>
-</article>
-<article class="double-loop-card category-acquisition">
-<div class="double-loop-card-head"><span class="double-loop-number">2</span><span class="double-loop-category">Acquisition</span></div>
-<h3>MQL</h3><p>A Marketing Qualified Lead whose profile and behaviour indicate a relevant fit and measurable intention.</p>
-</article>
-<article class="double-loop-card category-acquisition">
-<div class="double-loop-card-head"><span class="double-loop-number">3</span><span class="double-loop-category">Acquisition</span></div>
-<h3>SQL</h3><p>A Sales Qualified Lead ready for commercial management because fit, need and buying readiness have been validated.</p>
-</article>
-<article class="double-loop-card category-acquisition">
-<div class="double-loop-card-head"><span class="double-loop-number">4</span><span class="double-loop-category">Acquisition</span></div>
-<h3>Omnichannel</h3><p>A coordinated customer experience across channels, messages and touchpoints, with continuity of context and data.</p>
-</article>
-<article class="double-loop-card category-acquisition">
-<div class="double-loop-card-head"><span class="double-loop-number">5</span><span class="double-loop-category">Acquisition</span></div>
-<h3>Sales</h3><p>Conversion of the qualified opportunity into a customer relationship through a relevant value proposition and commercial process.</p>
-</article>
-<article class="double-loop-card category-loyalty">
-<div class="double-loop-card-head"><span class="double-loop-number">6</span><span class="double-loop-category">Loyalty</span></div>
-<h3>Customer Experience</h3><p>Systematic improvement of each customer interaction to create a consistent, valuable and memorable relationship.</p>
-</article>
-<article class="double-loop-card category-loyalty">
-<div class="double-loop-card-head"><span class="double-loop-number">7</span><span class="double-loop-category">Loyalty</span></div>
-<h3>Data Ingestion and Normalisation</h3><p>Capture, validation, cleaning and structuring of customer data so it can be used reliably across systems and decisions.</p>
-</article>
-<article class="double-loop-card category-loyalty">
-<div class="double-loop-card-head"><span class="double-loop-number">8</span><span class="double-loop-category">Loyalty</span></div>
-<h3>Segmentation</h3><p>Grouping customers by behaviour, value, needs, risk, relationship stage and other relevant evidence.</p>
-</article>
-<article class="double-loop-card category-loyalty">
-<div class="double-loop-card-head"><span class="double-loop-number">9</span><span class="double-loop-category">Loyalty</span></div>
-<h3>Prioritised Actions (SPO)</h3><p>Strategy Priority Operation: prioritising and executing the actions with the greatest expected impact, feasibility and relationship value.</p>
-</article>
-<article class="double-loop-card category-loyalty">
-<div class="double-loop-card-head"><span class="double-loop-number">10</span><span class="double-loop-category">Loyalty</span></div>
-<h3>Personalised Campaigns</h3><p>Designing and activating relevant campaigns for each segment and customer context through evidence-based personalisation.</p>
-</article>
-<article class="double-loop-card category-feedback">
-<div class="double-loop-card-head"><span class="double-loop-number">11</span><span class="double-loop-category">Feedback</span></div>
-<h3>Customer Insights and KPIs</h3><p>Transforming customer behaviour, experience and performance data into learning, indicators and evidence for better decisions.</p>
-</article>
-<article class="double-loop-card category-data-buyer">
-<div class="double-loop-card-head"><span class="double-loop-number">12</span><span class="double-loop-category">Feedback</span></div>
-<h3>Data Buyer Persona</h3><p>The feedback output that returns customer evidence to acquisition. It is also the Digital Customer Twins action used to obtain and enrich the customer model.</p><p class="double-loop-humble-note"><strong>DOC ROI contribution.</strong> A modest extension is to make point 12 explicit as the action that transforms loyalty evidence into a refreshed Data Buyer Persona for the next acquisition cycle.</p>
-</article>
-</div>`;
-
-  const gridStart=html.indexOf('<div class="double-loop-card-grid">');
-  const convergenceStart=html.indexOf('<div class="convergence-note">',gridStart);
-  if(gridStart!==-1 && convergenceStart!==-1){
-    html=html.slice(0,gridStart)+correctedGrid+'\n</div>\n'+html.slice(convergenceStart);
-  }
-
-  html=html.replace(
-    '<div class="key-card"><b>8. Every speciality belongs to the same digital DNA</b><p>Strategy, transformation, management, business, operations and KPI systems are different angles of the same customer-centred digital reality.</p></div>',
-    '<div class="key-card"><b>8. Triple Loop and Customer-Centric Management Architecture</b><p>The Triple Loop connects acquisition, loyalty and repurchase, and feedback and learning. The Customer-Centric Management Architecture aligns strategy, digital transformation and AI, administration and resource management, business, operations and KPI management around the same customer evidence.</p></div>'
-  );
-
-  const customerReference=`<div class="customer-reference-note">
-<strong>Reference only · Buyer Persona and Decision Maker</strong>
-<p>The Buyer Persona identifies the customer profile and context, while the Decision Maker identifies the person or role with authority to approve an organisational commitment. Their construction and practical application will be developed in a later subject.</p>
-</div>`;
-
-  const practiceStart=html.indexOf('<div aria-label="DOC ROI practical prescriptions" class="practice-grid">');
-  const bridgeStart=html.indexOf('<div class="bridge-box">',practiceStart);
-  if(practiceStart!==-1 && bridgeStart!==-1){
-    html=html.slice(0,practiceStart)+customerReference+'\n'+html.slice(bridgeStart);
-  }
-
-  const kaiDecisionReflection=`<div class="final-kai-reflection">
-<span class="label">Final strategic reflection · KAI·ROI · φᵢ / Decision</span>
-<strong>
-  The Digital and AI Market creates value only when critical decisions are made with data, traceability, explicit hypotheses and expected return.
-</strong>
-<p>
-  In the official KAI·ROI v1 architecture, <span class="kai-symbol">φᵢ</span> represents Decision: the quality, maturity and decision-making capability associated with the unit analysed. Because φᵢ is a multiplicative component of KAIᵢ*, weak decision-making constrains value activation even when data, digitalisation, automation and AI are available.
-</p>
-<p>
-  This session therefore leads to one operational question: are critical decisions made using data, traceability, explicit hypotheses and expected return? A Data Buyer Persona or Decision Maker, a digitally mapped journey and reliable customer evidence are essential inputs to that decision, but they do not replace it.
-</p>
-<p>
-  The final strategic lesson is that digitalisation and AI must improve the quality of decisions so that the organisation can connect objectives, intelligence, customer signals, productivity, portfolio health and data monetisation with cost, WACC and Customer Equity.
-</p>
-<p><em>This belongs to the operational implementation layer and does not replace the official KAI·ROI v1 formulation.</em></p>
-<a href="https://docroi.marketing/kai-equation/" rel="noopener" target="_blank">
-  Explore the official KAI·ROI Equation ↗
-</a>
-</div>`;
-
-  html=html.replace(
-    /<div class="final-kai-reflection">[\s\S]*?<\/div>\s*<div class="convergence-note">/,
-    kaiDecisionReflection+'\n<div class="convergence-note">'
-  );
+  const patch=`<script>(()=>{const TARGET='${TARGET}';const fix=()=>{const anchors=[...document.querySelectorAll('a')];const a=anchors.find(x=>x.getAttribute('href')==='#internet-dynamics-practice'||/Go to the Internet Dynamics Vitamin/i.test(x.textContent));if(a){a.setAttribute('href',TARGET);a.setAttribute('target','_blank');a.setAttribute('rel','noopener');if(!a.dataset.docRoiFixed){a.dataset.docRoiFixed='1';a.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();window.open(TARGET,'_blank','noopener');},true);}}const grid=document.querySelector('.double-loop-card-grid');if(grid&&!grid.dataset.docRoiFixed){const data=[['Acquisition','Buyer Persona','An evidence-based definition of the target customer profile, connected to a clear offer and acquisition strategy.'],['Acquisition','MQL','A Marketing Qualified Lead whose profile and behaviour indicate a relevant fit and measurable intention.'],['Acquisition','SQL','A Sales Qualified Lead ready for commercial management because fit, need and buying readiness have been validated.'],['Acquisition','Omnichannel','A coordinated customer experience across channels, messages and touchpoints, with continuity of context and data.'],['Acquisition','Sales','Conversion of the qualified opportunity into a customer relationship through a relevant value proposition and commercial process.'],['Loyalty','Customer Experience','Systematic improvement of each customer interaction to create a consistent, valuable and memorable relationship.'],['Loyalty','Data Ingestion and Normalisation','Capture, validation, cleaning and structuring of customer data so it can be used reliably across systems and decisions.'],['Loyalty','Segmentation','Grouping customers by behaviour, value, needs, risk, relationship stage and other relevant evidence.'],['Loyalty','Prioritised Actions (SPO)','Strategy Priority Operation: prioritising and executing the actions with the greatest expected impact, feasibility and relationship value.'],['Loyalty','Personalised Campaigns','Designing and activating relevant campaigns for each segment and customer context through evidence-based personalisation.'],['Feedback','Customer Insights and KPIs','Transforming customer behaviour, experience and performance data into learning, indicators and evidence for better decisions.'],['Feedback','Data Buyer Persona','The feedback output that returns customer evidence to acquisition. It is also the Digital Customer Twins action used to obtain and enrich the customer model.']];grid.innerHTML=data.map((d,i)=>'<article class="double-loop-card '+(i===10?'category-feedback':i===11?'category-data-buyer':i<5?'category-acquisition':'category-loyalty')+'"><div class="double-loop-card-head"><span class="double-loop-number">'+(i+1)+'</span><span class="double-loop-category">'+d[0]+'</span></div><h3>'+d[1]+'</h3><p>'+d[2]+'</p>'+(i===11?'<p class="double-loop-humble-note"><strong>DOC ROI contribution.</strong> A modest extension is to make point 12 explicit as the action that transforms loyalty evidence into a refreshed Data Buyer Persona for the next acquisition cycle.</p>':'')+'</article>').join('');grid.dataset.docRoiFixed='1';}const old=[...document.querySelectorAll('.key-card b')].find(x=>x.textContent.trim()==='8. Every speciality belongs to the same digital DNA');if(old){old.textContent='8. Triple Loop and Customer-Centric Management Architecture';old.nextElementSibling.textContent='The Triple Loop connects acquisition, loyalty and repurchase, and feedback and learning. The Customer-Centric Management Architecture aligns strategy, digital transformation and AI, administration and resource management, business, operations and KPI management around the same customer evidence.';}const practice=document.querySelector('[aria-label="DOC ROI practical prescriptions"].practice-grid');if(practice&&!document.querySelector('.customer-reference-note'))practice.outerHTML='<div class="customer-reference-note"><strong>Reference only · Buyer Persona and Decision Maker</strong><p>The Buyer Persona identifies the customer profile and context, while the Decision Maker identifies the person or role with authority to approve an organisational commitment. Their construction and practical application will be developed in a later subject.</p></div>';const reflection=document.querySelector('.final-kai-reflection');if(reflection&&!reflection.dataset.docRoiFixed){reflection.innerHTML='<span class="label">Final strategic reflection · KAI·ROI · φᵢ / Decision</span><strong>The Digital and AI Market creates value only when critical decisions are made with data, traceability, explicit hypotheses and expected return.</strong><p>In the official KAI·ROI v1 architecture, <span class="kai-symbol">φᵢ</span> represents Decision: the quality, maturity and decision-making capability associated with the unit analysed. Because φᵢ is a multiplicative component of KAIᵢ*, weak decision-making constrains value activation even when data, digitalisation, automation and AI are available.</p><p>This session therefore leads to one operational question: are critical decisions made using data, traceability, explicit hypotheses and expected return? A Data Buyer Persona or Decision Maker, a digitally mapped journey and reliable customer evidence are essential inputs to that decision, but they do not replace it.</p><p>The final strategic lesson is that digitalisation and AI must improve the quality of decisions so that the organisation can connect objectives, intelligence, customer signals, productivity, portfolio health and data monetisation with cost, WACC and Customer Equity.</p><p><em>This belongs to the operational implementation layer and does not replace the official KAI·ROI v1 formulation.</em></p><a href="https://docroi.marketing/kai-equation/" rel="noopener" target="_blank">Explore the official KAI·ROI Equation ↗</a>';reflection.dataset.docRoiFixed='1';}};fix();setTimeout(fix,0);setTimeout(fix,300);setTimeout(fix,1000);})();<\/script>`;
+  html=html.replace('</body>',patch+'</body>');
 
   document.open();
   document.write(html);

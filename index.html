@@ -27,6 +27,29 @@
     'https://docroi.marketing/wp-content/uploads/2026/07/Triple-Loop.png'
   );
 
+  html=html.replace(/Customer\s+(?:Double|Triple)\s+Loop/g,'Customer Business Loop');
+  html=html.replace(/double loop/gi,'Customer Business Loop');
+  html=html.replace(
+    '<span class="slide-kicker">McKinsey-Inspired Customer Business Loop</span>',
+    '<span class="slide-kicker">Customer Business Loop</span>'
+  );
+  html=html.replace(
+    'How does customer centricity create a Customer Business Loop between acquisition and loyalty?',
+    'How does the Customer Business Loop connect acquisition, loyalty, repurchase and learning?'
+  );
+  html=html.replace(
+    'Core concept · McKinsey-inspired Customer Business Loop',
+    'Core concept · Customer Business Loop'
+  );
+  html=html.replace(
+    'The acquisition loop converts demand into customers, while the loyalty loop turns customer experience and data into intelligence. DOC ROI closes the Customer Business Loop at point 12 by returning the most valuable customer patterns to a refined Data Buyer Persona for the next acquisition cycle.',
+    'The Customer Business Loop connects acquisition, loyalty and repurchase, and feedback and learning. Point 12 returns the most valuable customer patterns to a refined Data Buyer Persona, improving the next acquisition cycle.'
+  );
+  html=html.replace(
+    'Customer centricity creates a Customer Business Loop because acquisition generates customers, and loyalty reveals which customers are worth repeating, protecting and replicating in the next cycle.',
+    'Customer centricity creates a Customer Business Loop by connecting acquisition with loyalty, repurchase, feedback and learning, so the next cycle begins with better customer evidence.'
+  );
+
   html=html.replace('</style>', `
 .double-loop-card.category-feedback::before{
   background:linear-gradient(90deg,#17275F 0%,#344A82 100%);

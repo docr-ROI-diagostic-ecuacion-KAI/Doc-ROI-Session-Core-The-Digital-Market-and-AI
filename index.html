@@ -25,6 +25,17 @@
   html=html.replace(/My\s+(?:Medicine|Medical)\s+Cabinet/gi,'My Cabinet');
 
   html=html.replace(
+    /<a\b([^>]*)>([\s\S]*?Go to the Internet Dynamics Vitamin[\s\S]*?)<\/a>/gi,
+    (match,attributes,content)=>{
+      const cleanedAttributes=attributes
+        .replace(/\s+href=(['"])[\s\S]*?\1/i,'')
+        .replace(/\s+target=(['"])[\s\S]*?\1/i,'')
+        .replace(/\s+rel=(['"])[\s\S]*?\1/i,'');
+      return `<a${cleanedAttributes} href="https://doc-roi-internet-dynamics.vercel.app/" target="_blank" rel="noopener">${content}</a>`;
+    }
+  );
+
+  html=html.replace(
     'https://docroi.marketing/wp-content/uploads/2026/07/937f2a27-909d-4c2c-831a-769b19ff0ed9.png',
     'https://docroi.marketing/wp-content/uploads/2026/07/Triple-Loop.png'
   );

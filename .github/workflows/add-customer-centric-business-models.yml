@@ -1,0 +1,221 @@
+name: Add Customer-Centric Business Models section
+
+on:
+  push:
+    paths:
+      - .github/workflows/add-customer-centric-business-models.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-payload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install HTML parser
+        run: python -m pip install beautifulsoup4
+
+      - name: Insert section 08 and renumber the session
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from bs4 import BeautifulSoup
+          import base64
+          import gzip
+          import math
+          import re
+
+          asset_dir = Path('assets/docroi')
+          chunk_paths = [asset_dir / f'gzchunk{i}.txt' for i in range(4)]
+          encoded = ''.join(path.read_text(encoding='utf-8').strip() for path in chunk_paths)
+          html = gzip.decompress(base64.b64decode(encoded)).decode('utf-8')
+
+          if 'Customer-Centric Business Models' in html:
+              print('The new section is already present. No insertion required.')
+              raise SystemExit(0)
+
+          soup = BeautifulSoup(html, 'html.parser')
+          slides = soup.select('article.slide')
+          if not slides:
+              raise SystemExit('No slide articles were found.')
+
+          loop_index = next((i for i, slide in enumerate(slides) if 'Customer Business Loop' in slide.get_text(' ', strip=True)), None)
+          management_index = next((i for i, slide in enumerate(slides) if 'Customer-Centric Management Architecture' in slide.get_text(' ', strip=True)), None)
+
+          if loop_index is None or management_index is None:
+              raise SystemExit('The Customer Business Loop or Customer-Centric Management Architecture section could not be located.')
+          if management_index != loop_index + 1:
+              raise SystemExit('The target sections are not consecutive; insertion stopped to avoid damaging the architecture.')
+
+          new_slide_html = '''
+          <article class="slide">
+            <span class="slide-kicker">08 · Customer-Centric Business Models</span>
+            <h2>Customer centricity changes how value is created, delivered and monetised</h2>
+            <p class="question">A customer-centric business model does more than improve service. It connects the stage of the relationship, the available customer evidence, the type of offer and the economic logic used to create sustainable value.</p>
+
+            <div class="business-objective">
+              <small>Concept Objective</small>
+              <strong>By the end of this section, it should be possible to explain how a relationship evolves from audience to lead, customer and loyal customer, and how each stage supports a different offer and business model.</strong>
+              <p>The concept is demonstrated when the funnel stage, digital customer type, offer, revenue logic and feedback mechanism can be connected without confusing acquisition, transaction and loyalty economics.</p>
+            </div>
+
+            <div class="business-explanation">
+              <h3>1. Customer centricity is an economic architecture</h3>
+              <p>Customer centricity means organising the business around evidence about customer needs, behaviour, decisions and relationship value. The organisation does not offer the same product, message or channel at every stage. It changes the offer as the relationship becomes richer and the available evidence becomes more reliable.</p>
+              <p>The model contains four connected stages. <b>Growth and Social Media</b> create attention and identifiable audiences. <b>MQL and SQL</b> convert that attention into qualified demand. <b>Sales</b> transform demand into a transaction. <b>Loyalty and Repeat Sales</b> use experience and relationship evidence to increase retention, repeat purchase and Customer Equity.</p>
+              <h3>2. Customer types are relationship states</h3>
+              <p>A follower, lead, buyer and loyal customer are not permanent identities. They describe the current state of the relationship. The same person may move forward, remain inactive, return later or become a source of recommendations and learning.</p>
+              <h3>3. The business model evolves with the relationship</h3>
+              <p>At the top of the funnel, value may come from audiences and commercial content. In the middle, platform services and qualified demand can create monetisation opportunities. At the transaction stage, products, services and subscriptions create direct revenue. In loyalty, personalisation, repeat purchase, referrals and lower churn improve long-term economic value.</p>
+            </div>
+
+            <section class="business-model-frame" aria-label="Customer-centric business model architecture">
+              <header class="business-model-header">
+                <div>Funnel stage</div>
+                <div>Digital customer type</div>
+                <div>Type of offer</div>
+                <div>Business model and value logic</div>
+              </header>
+
+              <div class="business-model-row growth-row">
+                <div class="stage-cell"><span>01</span><b>Growth / Social Media</b><p>Attention, discovery and audience formation.</p></div>
+                <div class="customer-cell"><b>Consented identifiers</b><p>Audiences, cohorts, followers and content communities.</p></div>
+                <div class="offer-cell"><div class="offer-funnel offer-1"><small>Offer</small><b>Content</b></div></div>
+                <div class="model-cell"><b>Audience and commercial-content model</b><ul><li>B2B commercial content, advertising and sponsorship.</li><li>Audience cohorts based on behaviour, tagged content and strategic keywords.</li><li>Consented first-party data used to understand consumption intention.</li><li>Personalised campaigns for clearly defined audience groups.</li></ul></div>
+              </div>
+
+              <div class="business-model-row lead-row">
+                <div class="stage-cell"><span>02</span><b>MQL / SQL</b><p>Qualification of demand and decision readiness.</p></div>
+                <div class="customer-cell"><b>Qualified demand</b><p>Lead segments, prospects, Marketing Qualified Leads and Sales Qualified Leads.</p></div>
+                <div class="offer-cell"><div class="offer-funnel offer-2"><small>Offer</small><b>Platform Services</b></div></div>
+                <div class="model-cell"><b>Platform and data-enabled model</b><ul><li>Demand and offer matching through platform services.</li><li>Data monetisation through aggregated, permission-based insight.</li><li>Cross-selling, upselling and recommended add-on services.</li><li>Higher average transaction value and qualified B2C demand for B2B partners.</li></ul></div>
+              </div>
+
+              <div class="business-model-row sales-row">
+                <div class="stage-cell"><span>03</span><b>Sales</b><p>Conversion into a paid customer relationship.</p></div>
+                <div class="customer-cell"><b>Transaction customers</b><p>Buyers, consumers, subscribers and active customers.</p></div>
+                <div class="offer-cell"><div class="offer-funnel offer-3"><small>Offer</small><b>Products / Services</b></div></div>
+                <div class="model-cell"><b>Transaction model</b><ul><li>Product sales and service fees.</li><li>Subscriptions, licences or usage-based payment.</li><li>Bundles and product–service combinations.</li><li>Revenue generated when a qualified need becomes an accepted offer.</li></ul></div>
+              </div>
+
+              <div class="business-model-row loyalty-row">
+                <div class="stage-cell"><span>04</span><b>Loyalty &amp; Repeat Sales</b><p>Retention, advocacy and relationship expansion.</p></div>
+                <div class="customer-cell"><b>Relationship customers</b><p>Loyal and retained customers prioritised through RFM, NPS, ABCD and SPO evidence.</p></div>
+                <div class="offer-cell"><div class="offer-funnel offer-4"><small>Offer</small><b>Personalised Experience</b></div></div>
+                <div class="model-cell"><b>Relationship-value model</b><ul><li>Upselling, cross-selling and repeat purchase.</li><li>Referrals, collaboration and price-premium potential.</li><li>Lower churn and lower future acquisition cost.</li><li>Lower service, quality and incident costs through learning and prevention.</li></ul></div>
+              </div>
+
+              <footer class="business-feedback-loop">
+                <span>↺</span>
+                <div><b>Feedback and learning move upstream</b><p>Customer experience, behavioural data and relationship outcomes improve the next audience, offer, price, channel and service decision. The funnel therefore behaves as a loop rather than a one-way sequence.</p></div>
+              </footer>
+            </section>
+
+            <div class="business-principles">
+              <section><small>Principle 1</small><b>Attention is not yet a customer</b><p>Audience reach creates potential value, but it must be converted into qualified demand before commercial assumptions become credible.</p></section>
+              <section><small>Principle 2</small><b>Data require permission and purpose</b><p>Identifiers, cookies and first-party data should be used transparently for a defined customer and business purpose.</p></section>
+              <section><small>Principle 3</small><b>Revenue is wider than the first sale</b><p>Subscription, repeat purchase, referral, collaboration and lower churn can be more valuable than one isolated transaction.</p></section>
+              <section><small>Principle 4</small><b>Experience produces economic evidence</b><p>Service quality, incidents, NPS, RFM and relationship behaviour reveal which actions deserve priority.</p></section>
+            </div>
+
+            <div class="business-case">
+              <small>Applied case · Digital sports content platform</small>
+              <h3>One relationship supports four different business models</h3>
+              <p>Free articles and videos create audiences and sponsorship value. Registration and newsletter behaviour identify qualified demand for events, memberships or partner offers. A subscription or paid service creates direct revenue. Usage, renewal, service contacts and recommendations then support personalisation, retention, referrals and lower churn.</p>
+              <p>The same organisation therefore moves from a content model to a platform model, a transaction model and a relationship-value model. The transition depends on evidence and customer permission, not merely on adding more technology.</p>
+            </div>
+
+            <div class="business-reference">
+              <small>Third-party perspectives</small>
+              <b>McKinsey customer journeys · Gartner omnichannel and customer data</b>
+              <p>McKinsey's customer decision journey explains why evaluation and loyalty are not strictly linear. Gartner's omnichannel and customer-data perspectives reinforce the need to connect touchpoints, permission-based evidence and coordinated customer interaction.</p>
+            </div>
+
+            <div class="business-prescription">
+              <small>DOC ROI Diagnostic · Customer-Centric Business Model Map</small>
+              <div class="business-prescription-grid">
+                <div><b>Input</b><span>Audience, lead, transaction and loyalty evidence.</span></div>
+                <div><b>Action</b><span>Connect each relationship stage with customer type, offer and value logic.</span></div>
+                <div><b>Output</b><span>A four-stage business model architecture and monetisation map.</span></div>
+                <div><b>Next input</b><span>The architecture becomes the basis for Customer-Centric Management Architecture.</span></div>
+              </div>
+            </div>
+
+            <div class="business-learning-evidence">
+              <small>Learning evidence</small>
+              <b>The concept has been learned when each source of revenue or economic value can be linked to a customer state, an offer and a traceable relationship outcome.</b>
+              <p>The resulting explanation should distinguish audience monetisation, platform value, transaction revenue and loyalty economics.</p>
+            </div>
+
+            <div class="convergence-note"><b>Connection with the following section.</b> The business model explains where value is created. The Customer-Centric Management Architecture explains how strategy, processes, systems, data, operations and KPIs must be organised to deliver that value consistently.</div>
+          </article>
+          '''
+
+          new_slide = BeautifulSoup(new_slide_html, 'html.parser').select_one('article.slide')
+          slides[loop_index].insert_after(new_slide)
+
+          css = '''
+          .business-objective,.business-learning-evidence{margin:16px 0;padding:18px 20px;border:1px solid #bfd0de;border-left:5px solid #0b4a73;background:#eef7fc}.business-objective small,.business-learning-evidence small,.business-case small,.business-reference small,.business-prescription small{display:block;margin-bottom:6px;color:#07547d;font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.business-objective strong,.business-learning-evidence b{display:block;margin-bottom:7px;font-size:17px;line-height:1.42}.business-objective p,.business-learning-evidence p{margin:0;color:#43546a;font-size:13px;line-height:1.65}.business-explanation{margin:16px 0;padding:20px;border:1px solid #d4dee7;background:#fff}.business-explanation h3{margin:0 0 7px;font-size:18px}.business-explanation h3:not(:first-child){margin-top:17px}.business-explanation p{margin:0 0 10px;color:#445267;font-size:13px;line-height:1.72}.business-model-frame{margin:18px 0;border:1px solid #afc3d3;background:#f7fafc;overflow:hidden}.business-model-header,.business-model-row{display:grid;grid-template-columns:170px 220px minmax(220px,.85fr) minmax(320px,1.35fr)}.business-model-header{background:#071b2b;color:#fff}.business-model-header div{padding:13px 14px;border-left:1px solid rgba(255,255,255,.15);font-size:12px;font-weight:900}.business-model-header div:first-child{border-left:0}.business-model-row{position:relative;border-top:1px solid #bfd0de;background:#fff}.business-model-row>div{padding:16px;border-left:1px solid #dbe4eb}.business-model-row>div:first-child{border-left:0}.stage-cell span{display:block;margin-bottom:5px;color:#0b5e8e;font-size:10px;font-weight:900;letter-spacing:.1em}.stage-cell b,.customer-cell b,.model-cell b{display:block;margin-bottom:6px;font-size:14px}.stage-cell p,.customer-cell p{margin:0;color:#59697a;font-size:11px;line-height:1.52}.offer-cell{display:flex;align-items:center;justify-content:center;background:#f4f8fb}.offer-funnel{padding:16px 18px;text-align:center;border:2px solid #0b2c43;background:#edf4f8;clip-path:polygon(4% 0,96% 0,88% 100%,12% 100%)}.offer-funnel small{display:block;margin-bottom:4px;color:#46677e;font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}.offer-funnel b{font-size:17px}.offer-1{width:100%}.offer-2{width:90%}.offer-3{width:80%}.offer-4{width:70%}.model-cell ul{margin:0;padding-left:18px;color:#435267;font-size:11px;line-height:1.55}.business-feedback-loop{display:flex;align-items:center;gap:14px;padding:15px 18px;background:#082c43;color:#fff}.business-feedback-loop>span{font-size:34px;font-weight:900}.business-feedback-loop b{display:block;margin-bottom:4px}.business-feedback-loop p{margin:0;color:#d5e4ee;font-size:11px;line-height:1.55}.business-principles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin:16px 0}.business-principles section{padding:15px;border:1px solid #c7d5df;border-top:5px solid #0b5e8e;background:#fff}.business-principles small{display:block;margin-bottom:5px;color:#0b5e8e;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.1em}.business-principles b{display:block;margin-bottom:6px;font-size:13px}.business-principles p{margin:0;color:#59697a;font-size:11px;line-height:1.5}.business-case,.business-reference,.business-prescription{margin:16px 0;padding:18px 20px;border:1px solid #c5d2dc;background:#fff}.business-case{border-left:5px solid #0b5e8e;background:#f7fafc}.business-case h3{margin:0 0 8px;font-size:18px}.business-case p,.business-reference p{margin:0 0 9px;color:#46566a;font-size:12px;line-height:1.65}.business-reference b{display:block;margin-bottom:6px;font-size:14px}.business-prescription{border-top:6px solid #0b4a73}.business-prescription-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.business-prescription-grid div{padding:12px;border:1px solid #d2dce4;background:#f7fafc}.business-prescription-grid b{display:block;margin-bottom:5px;font-size:11px}.business-prescription-grid span{display:block;color:#59697a;font-size:10px;line-height:1.48}@media(max-width:1100px){.business-model-frame{overflow:auto}.business-model-header,.business-model-row{min-width:1000px}.business-principles,.business-prescription-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:680px){.business-principles,.business-prescription-grid{grid-template-columns:1fr}}
+          '''
+
+          style = soup.find('style')
+          if not style:
+              raise SystemExit('No style block was found.')
+          style.string = (style.string or '') + css
+
+          slides = soup.select('article.slide')
+          for number, slide in enumerate(slides, start=1):
+              kicker = slide.select_one('.slide-kicker')
+              if kicker:
+                  text = kicker.get_text(' ', strip=True)
+                  text = re.sub(r'^\d+\s*[·.\-:]\s*', '', text)
+                  kicker.string = f'{number:02d} · {text}'
+
+          html = str(soup)
+
+          array_pattern = re.compile(r'const\s+slideData\s*=\s*\[(.*?)\]\s*;', re.S)
+          match = array_pattern.search(html)
+          if not match:
+              raise SystemExit('The slideData navigation array was not found.')
+
+          entry_pattern = re.compile(r'\[\s*"([^"]*)"\s*,\s*"([^"]*)"\s*,\s*"([^"]*)"\s*\]')
+          entries = entry_pattern.findall(match.group(1))
+          if len(entries) != len(slides) - 1:
+              raise SystemExit(f'Navigation entries ({len(entries)}) do not match original slides ({len(slides)-1}).')
+
+          entries.insert(loop_index + 1, ('08', 'Customer-Centric Business Models', 'From audience monetisation to relationship value.'))
+          entries = [(f'{i:02d}', title, desc) for i, (_, title, desc) in enumerate(entries, start=1)]
+          new_array = 'const slideData=[\n' + ',\n'.join(f'      ["{n}","{title}","{desc}"]' for n, title, desc in entries) + '\n    ];'
+          html = html[:match.start()] + new_array + html[match.end():]
+
+          html = re.sub(r'document\.getElementById\("referencesLink"\)\.addEventListener\("click",event=>\{event\.preventDefault\(\);goToSlide\((\d+)\)\}\);', lambda m: m.group(0), html)
+
+          compressed = gzip.compress(html.encode('utf-8'), compresslevel=9, mtime=0)
+          updated = base64.b64encode(compressed).decode('ascii')
+          chunk_size = math.ceil(len(updated) / 4)
+          for index, path in enumerate(chunk_paths):
+              start = index * chunk_size
+              end = min((index + 1) * chunk_size, len(updated))
+              path.write_text(updated[start:end], encoding='utf-8')
+
+          print(f'Inserted Customer-Centric Business Models as section {loop_index + 2}.')
+          print(f'Total sections: {len(slides)}.')
+          PY
+
+      - name: Commit updated session payload
+        shell: bash
+        run: |
+          git config user.name "DOC ROI Automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets/docroi/gzchunk0.txt assets/docroi/gzchunk1.txt assets/docroi/gzchunk2.txt assets/docroi/gzchunk3.txt
+          if git diff --cached --quiet; then
+            echo "No changes were required."
+            exit 0
+          fi
+          git commit -m "Add Customer-Centric Business Models section [skip ci]"
+          git push
